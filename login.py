@@ -43,7 +43,6 @@ class LoginGUI(Frame):
         self._quitButton = Button(self, text="Quit", command=self._quit)
         self._quitButton.pack()
 
-
     def _auth(self, uname, password):
 
         # Authentication for a specified username and password.
@@ -57,11 +56,11 @@ class LoginGUI(Frame):
         db.row_factory = sqlite3.Row  # Row factory allows us to refer to columns by name (default is by integer index)
         cursor = db.cursor()
 
-        sql_statement = '''SELECT name FROM users WHERE username = '%s' and password = '%s' ''' % (uname, password)
+        sql_statement = 'SELECT name FROM users WHERE username = ? and password = ?'
 
         print('About to execute the following SQL statement: \n' + sql_statement)
 
-        cursor.execute(sql_statement)   # Execute the SQL statement we created
+        cursor.execute(sql_statement, (uname, password))  # Execute the SQL statement we created
 
         result = None  # Assume login fails, unless DB returns a row for this user
 
@@ -74,17 +73,14 @@ class LoginGUI(Frame):
 
         return result
 
-
     def _quit(self):
 
         exit(0)
-
 
     def _login(self):
         username = self._usernameVar.get()
         password = self._passwordVar.get()
         result = self._auth(username, password)
-
 
         if result is None:
             display_result = "Username or password incorrect"
@@ -95,7 +91,6 @@ class LoginGUI(Frame):
 
 
 def setup_database():
-
     db = sqlite3.connect(database_filename)
     cursor = db.cursor()
 
@@ -121,12 +116,10 @@ def setup_database():
 
 
 def start_gui():
-
     LoginGUI().mainloop()
 
 
 def quit():
-
     sys.exit()
 
 
@@ -137,6 +130,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
